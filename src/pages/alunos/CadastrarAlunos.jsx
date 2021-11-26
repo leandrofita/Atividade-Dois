@@ -10,6 +10,11 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useParams } from "react-router";
 import { AlunoContext } from "../../context";
+import Lottie from "react-lottie";
+import animationData from "../../lotties/78259-loading.json";
+import TableContainer from "@mui/material/TableContainer";
+import Box from "@mui/material/Box";
+
 
 const CadastrarAlunos = () => {
   const { id } = useParams();
@@ -21,9 +26,18 @@ const CadastrarAlunos = () => {
   const [idade, setIdade] = useState(valorInicial);
   const [cidade, setCidade] = useState(valorInicial);
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    renderSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
   useEffect(() => {
     getAlunos();
-  }, []);
+  },[]);
 
   const SearchOnAlunosList = (listaAlunos) => {
     listaAlunos.forEach((aluno) => {
@@ -36,18 +50,22 @@ const CadastrarAlunos = () => {
   };
 
   const getAlunos = () => {
-    if (alunos.length > 0) { // Verifica se os alunos já existem na lista
+    if (alunos.length > 0) {
       
+      //Verifica se os alunos já existem na lista
+
       SearchOnAlunosList(alunos);
     } else {
-      axios.get(API_URL).then((response) => { // Faz a requisição dos Alunos na API
+      axios.get(API_URL).then((response) => {
+        // Faz a requisição dos Alunos na API
         setAlunos(response.data); // caso não encontre o aluno na lista, faz a requisição para a API
         SearchOnAlunosList(response.data);
       });
     }
   };
 
-  const buscarAlunosNaAPI = () => { // Método que faz a requisição dos Alunos na API
+  const buscarAlunosNaAPI = () => {
+    // Método que faz a requisição dos Alunos na API
     axios.get(API_URL).then((response) => {
       setAlunos(response.data);
     });
@@ -106,30 +124,40 @@ const CadastrarAlunos = () => {
   };
 
   return (
-    <Form>
-      <InputCadastro
-        label="Nome"
-        variant="outlined"
-        value={nome}
-        onChange={(e) => setNome(e.target.value)}
-      />
-      <InputCadastro
-        label="Idade"
-        variant="outlined"
-        value={idade}
-        onChange={(e) => setIdade(e.target.value)}
-      />
-      <InputCadastro
-        label="Cidade"
-        variant="outlined"
-        value={cidade}
-        onChange={(e) => setCidade(e.target.value)}
-      />
+    <Box sx={{ marginTop: "25px" }}>
+      {alunos.length > 0 ? (
+        <TableContainer>
+          <Form>
+            <InputCadastro
+              label="Nome"
+              variant="outlined"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+            />
+            <InputCadastro
+              label="Idade"
+              variant="outlined"
+              value={idade}
+              onChange={(e) => setIdade(e.target.value)}
+            />
+            <InputCadastro
+              label="Cidade"
+              variant="outlined"
+              value={cidade}
+              onChange={(e) => setCidade(e.target.value)}
+            />
 
-      <ButtonCadastro variant="contained" onClick={cadastrarAlunos}>
-        {id ? "Editar" : "Cadastrar"}
-      </ButtonCadastro>
-    </Form>
+            <ButtonCadastro variant="contained" onClick={cadastrarAlunos}>
+              {id ? "Editar" : "Cadastrar"}
+            </ButtonCadastro>
+          </Form>
+        </TableContainer>
+      ) : ( // else do ternário
+        <>
+          <Lottie options={defaultOptions} height={500} width={500} />
+        </>
+      )}
+    </Box>
   );
 };
 

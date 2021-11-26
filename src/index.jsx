@@ -1,15 +1,16 @@
-import React from "react";
+import React, {useContext} from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import { BrowserRouter, useRoutes } from "react-router-dom";
 import AlunosListagem from "./pages/alunos/AlunosListagem";
-import Navbar from "./components/Navbar";
+import NavBar from "./components/navBar";
 import Container from "@mui/material/Container";
 import CadastrarAlunos from "./pages/alunos/CadastrarAlunos";
 import MateriasListagem from "./pages/materias/MateriaLista";
 import CadastrarMaterias from "./pages/materias/CadastrarMaterias.jsx";
 import HomePage from "./pages/home-page";
-import { AlunoProvider } from "./context";
+import { AlunoProvider, MateriaProvider } from "./context";
+
 
 const Routes = () => {
   const routes = useRoutes([
@@ -26,15 +27,18 @@ const Routes = () => {
 };
 
 ReactDOM.render(
-  <AlunoProvider>
-    <React.StrictMode>
-      <BrowserRouter>
-        <Navbar />
-        <Container maxWidth="md">
-          <Routes />
-        </Container>
-      </BrowserRouter>
-    </React.StrictMode>
-  </AlunoProvider>,
+  
+  <MateriaProvider>
+    <AlunoProvider>
+      <React.StrictMode>
+        <BrowserRouter>
+          <NavBar />
+          <Container maxWidth="md">
+            <Routes />
+          </Container>
+        </BrowserRouter>
+      </React.StrictMode>
+    </AlunoProvider>
+  </MateriaProvider>,
   document.getElementById("root")
 );

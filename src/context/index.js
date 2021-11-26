@@ -21,13 +21,13 @@ export const MateriaProvider = ({children}) => {
   const [materias, setMaterias] = useState([]);
 
   return (
-    <MateriaProvider
+    <MateriaContext.Provider
       value={{
         materias,
         setMaterias,
       }}
       >
         {children}
-    </MateriaProvider>
+    </MateriaContext.Provider>
   )
 }

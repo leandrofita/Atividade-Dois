@@ -1,18 +1,20 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import {
   InputCadastro,
   ButtonCadastro,
   Form,
-} from "../../components/Cadastros";
+} from "../../styles/Cadastros";
 import { API_MATERIA_URL } from "../../constants";
 import {useParams} from "react-router-dom";
+import { MateriaContext } from "../../context";
 
 const CadastarMaterias = () => {
   const MySwal = withReactContent(Swal); // CRIAÇÃO DO ELEMENTO DE MENSAGEM TIPO POP-UP
   const { id } = useParams();
+  const {materias, setMaterias} = useContext(MateriaContext);
 
   const valorIncial = id ? "" : null;
   const [titulo, setTitulo] = useState(valorIncial);
@@ -22,16 +24,31 @@ const CadastarMaterias = () => {
     getMaterias();
   }, []);
 
+  const SearchOnMateriasList = (listaMaterias) => {
+    listaMaterias.forEach((materia) => {
+      if (materia.id == id) {
+        setTitulo(materia.titulo);
+        setProfessorNome(materia.professor_nome);
+      }
+    })
+  }
+
+  const buscarMateriasNaAPI = () => {
+    axios.get(API_MATERIA_URL).then((response) =>{
+      setMaterias(response.data)
+    })
+  }
+
   const getMaterias = () => {
-    axios.get(API_MATERIA_URL).then((response) => {
-      response.data.forEach((materia) => {
-        // eslint-disable-next-line
-        if (materia.id == id) {
-          setTitulo(materia.titulo);
-          setProfessorNome(materia.professor_nome);
-        }
+    if(materias.length > 0) {
+      SearchOnMateriasList(materias);
+    } else {
+
+      axios.get(API_MATERIA_URL).then((response) => {
+        setMaterias(response.data)
+        SearchOnMateriasList(response.data);    
       });
-    });
+    }
   };
 
   const cadastrarMaterias = () => {
@@ -44,6 +61,7 @@ const CadastarMaterias = () => {
         })
         .then((response) => {
           if (response.status === 200) {
+            buscarMateriasNaAPI();
             MySwal.fire(<p>{response?.data?.message}</p>);
             limparCampos();
           }

@@ -7,7 +7,7 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { StyledTableCell, StyledTableRow } from "./styles";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { API_MATERIA_URL } from "../../constants";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -15,11 +15,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from "react-router-dom";
+import { MateriaContext } from "../../context";
 
 const MateriasListagem = () => {
   const navigate = useNavigate();
   const MySwal = withReactContent(Swal);
-  const [materias, setMaterias] = useState([]);
+  // const [materias, setMaterias] = useState([]);
+  const {materias, setMaterias} = useContext(MateriaContext);
 
   useEffect(() => {  // construtor vazio da Lista de Materias
     getMaterias();

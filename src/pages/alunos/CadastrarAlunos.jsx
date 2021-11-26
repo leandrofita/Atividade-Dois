@@ -4,7 +4,7 @@ import {
   ButtonCadastro,
   Form,
   InputCadastro,
-} from "../../components/Cadastros";
+} from "../../styles/Cadastros";
 import { API_URL } from "../../constants";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -50,10 +50,7 @@ const CadastrarAlunos = () => {
   };
 
   const getAlunos = () => {
-    if (alunos.length > 0) {
-      
-      //Verifica se os alunos já existem na lista
-
+    if (alunos.length > 0) { //Verifica se os alunos já existem na lista
       SearchOnAlunosList(alunos);
     } else {
       axios.get(API_URL).then((response) => {
